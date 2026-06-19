@@ -1,0 +1,42 @@
+# Render Blueprint — Infrastructure as Code.
+# https://render.com/docs/blueprint-spec
+#
+# Usage: push this repo to GitHub, then in the Render Dashboard choose
+# New > Blueprint and select this repo. Render will read this file and
+# provision the service below. You'll be prompted for the `sync: false`
+# secret values during that flow (GOOGLE_API_KEY, SECRET_KEY).
+
+services:
+  - type: web
+    runtime: python
+    name: ai-finance-analyst
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --workers 2 --threads 4 --timeout 120 --bind 0.0.0.0:$PORT
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_DEBUG
+        value: "false"
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_ORIGINS
+        value: ""
+      - key: ANALYZE_RATE_LIMIT
+        value: "10 per minute"
+      - key: GLOBAL_RATE_LIMIT
+        value: "200 per hour"
+      - key: MAX_QUERY_LENGTH
+        value: "1000"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: MODEL_FALLBACK_CHAIN
+        value: "gemini-2.5-flash-lite,gemini-2.5-flash,gemini-2.0-flash"

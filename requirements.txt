@@ -1,0 +1,30 @@
+# Web framework
+Flask==3.1.3
+gunicorn==26.0.0
+
+# Security / production hardening
+Flask-Limiter==4.1.1
+Flask-Cors==6.0.5
+
+# Config
+python-dotenv==1.2.2
+
+# AI / agents
+# IMPORTANT: google-adk 1.21.0 requires google-genai>=1.55.0,<2.0.0.
+# Do NOT upgrade google-genai to 2.x without also upgrading google-adk and
+# re-testing the pipeline end-to-end — the previous unpinned "google-genai"
+# line in this file would have silently installed an incompatible 2.x
+# release on a fresh `pip install`.
+google-adk==1.21.0
+google-genai==1.75.0
+
+# Data
+yfinance==1.4.1
+pandas==2.2.3
+
+# pydantic and httpx are pulled in transitively by google-adk / google-genai
+# with their own internal version constraints (pydantic>=2.11.1 in this adk
+# release, via google-cloud-aiplatform). Deliberately left unpinned here so
+# pip's resolver can satisfy those constraints itself — pinning a specific
+# version previously caused a ResolutionImpossible error against
+# google-cloud-aiplatform's pydantic>=2.11.1 requirement.
